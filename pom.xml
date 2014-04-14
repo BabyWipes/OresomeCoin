@@ -2,16 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.oresomecraft</groupId>
     <artifactId>OresomeCoin</artifactId>
     <packaging>jar</packaging>
+
     <name>OresomeCoin</name>
     <url>http://oresomecraft.com/</url>
     <version>1.0</version>
+    <description>OresomeCraft global economy system</description>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>com.oresomecraft.coin.OresomeCoin</main.class>
     </properties>
+
     <build>
         <finalName>${project.name}</finalName>
         <sourceDirectory>${basedir}/src</sourceDirectory>
@@ -59,11 +64,12 @@
             </plugin>
         </plugins>
     </build>
+
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.7.2-R0.3-SNAPSHOT</version>
+            <artifactId>craftbukkit</artifactId>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q</groupId>
@@ -71,6 +77,7 @@
             <version>0.3</version>
         </dependency>
     </dependencies>
+
     <repositories>
         <repository>
             <id>OresomeCraft</id>
@@ -80,18 +87,24 @@
             <id>SpigotMC</id>
             <url>http://repo.md-5.net/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public</url>
+        </repository>
     </repositories>
+
     <scm>
         <tag>HEAD</tag>
         <connection>scm:git:git://github.com/OresomeCraft/OresomeCoin.git</connection>
         <url>https://github.com/OresomeCraft/OresomeCoin</url>
         <developerConnection>scm:git:ssh://git@github.com:OresomeCraft/OresomeCoin.git</developerConnection>
     </scm>
-    <description>OresomeCraft economy system</description>
+
     <organization>
         <name>OresomeCraft</name>
         <url>http://oresomecraft.com/</url>
     </organization>
+
     <issueManagement>
         <system>GitHub</system>
         <url>https://github.com/OresomeCraft/OresomeCoin/issues</url>

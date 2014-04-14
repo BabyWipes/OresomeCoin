@@ -1,18 +1,20 @@
 package com.oresomecraft.coin;
 
+import java.util.UUID;
+
 public class Wallet {
 
-    private Wallet(int ID) {
-        this.ID = ID;
-        this.fetch();
+    public Wallet(UUID userId, int balance) {
+        this.userId = userId;
+        this.balance = balance;
     }
 
-    private int ID;
+    private UUID userId;
     private String owner;
     private double balance;
 
-    public int getID() {
-        return this.ID;
+    public UUID getID() {
+        return this.userId;
     }
 
     public String getOwner() {
@@ -23,6 +25,10 @@ public class Wallet {
         return this.balance;
     }
 
+    protected void setBalance(double amount) {
+        this.balance = amount;
+    }
+
     protected void depositCoins(double amount) {
         this.balance = this.balance + amount;
     }
@@ -31,11 +37,7 @@ public class Wallet {
         this.balance = this.balance - amount;
     }
 
-    private synchronized void fetch() {
-        // TODO: fetch account info from database, set amounts, etc
-    }
-
-    private synchronized void writeToDatabase() {
+    synchronized void writeToDatabase() {
         // TODO: write/save into to data base
     }
 

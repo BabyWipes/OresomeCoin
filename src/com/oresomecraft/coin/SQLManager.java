@@ -3,6 +3,10 @@ package com.oresomecraft.coin;
 import com.oresomecraft.coin.database.MySQL;
 import org.bukkit.Bukkit;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.UUID;
+
 public class SQLManager {
 
     public static MySQL mysql;
@@ -43,5 +47,50 @@ public class SQLManager {
                 mysql.close();
             }
         });
+    }
+
+    public static boolean hasWallet(UUID userId) {
+        try {
+            mysql.open();
+            ResultSet resultSet = mysql.query("SELECT * FROM wallets WHERE uuid = '" + userId.toString() + "'");
+            mysql.close();
+            return resultSet.getString("uuid") != null && !resultSet.getString("uuid").equals(" ") && !resultSet.getString("uuid").equals("");
+        } catch (SQLException ex) {
+            plugin.getLogger().warning("An SQL error occured while attempting to check if a UUID was attached to a wallet!");
+            plugin.getLogger().warning("UUID = " + userId.toString());
+        }
+        return false;
+    }
+
+    public static Wallet getWallet(UUID userId) {
+        if (OresomeCoin.onlineWallets.get(userId.toString()) != null) {
+            return OresomeCoin.onlineWallets.get(userId.toString());
+        } else if (hasWallet(userId)) {
+            try {
+                mysql.open();
+                ResultSet resultSet = mysql.query("SELECT * FROM wallets WHERE uuid = '" + userId.toString() + "'");
+                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                mysql.close();
+                return new Wallet(uuid, resultSet.getInt("balance"));
+            } catch (SQLException ex) {
+                plugin.getLogger().warning("An SQL error occured while attempting to get a UUID's wallet!");
+                plugin.getLogger().warning("UUID = " + userId.toString());
+            }
+        }
+        return null;
+    }
+
+    public static void generateWallet(UUID userId) {
+        if (!hasWallet(userId)) {
+            mysql.open();
+            mysql.query("INSERT INTO wallets WHERE uuid = '" + userId.toString() + "' AND balance = 0");
+            Wallet wallet = new Wallet(userId, 0);
+            OresomeCoin.onlineWallets.put(userId.toString(), wallet);
+            plugin.getLogger().info("Successfully created a wallet for " + userId.toString());
+            mysql.close();
+        } else {
+            plugin.getLogger().warning("Attempted to create a wallet but the UUID already has a wallet attached.");
+            plugin.getLogger().warning("UUID = " + userId.toString());
+        }
     }
 }

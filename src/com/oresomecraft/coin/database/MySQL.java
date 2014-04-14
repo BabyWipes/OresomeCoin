@@ -37,8 +37,8 @@ public class MySQL extends Database {
         try {
             Class.forName("com.mysql.jdbc.Driver"); // Check that server's Java has MySQL support.
             return true;
-        } catch (ClassNotFoundException e) {
-            this.writeError("Class Not Found Exception: " + e.getMessage() + ".", true);
+        } catch (ClassNotFoundException ex) {
+            this.writeError("Class Not Found Exception: " + ex.getMessage() + ".", true);
             return false;
         }
     }
@@ -51,9 +51,9 @@ public class MySQL extends Database {
                 url = "jdbc:mysql://" + this.hostname + ":" + this.portnmbr + "/" + this.database;
                 //return DriverManager.getConnection(url, this.username, this.password);
                 this.connection = DriverManager.getConnection(url, this.username, this.password);
-            } catch (SQLException e) {
+            } catch (SQLException ex) {
                 this.writeError(url, true);
-                this.writeError("Could not be resolved because of an SQL Exception: " + e.getMessage() + ".", true);
+                this.writeError("Could not be resolved because of an SQL Exception: " + ex.getMessage() + ".", true);
             }
         }
         return null;
@@ -65,8 +65,8 @@ public class MySQL extends Database {
         try {
             if (connection != null)
                 connection.close();
-        } catch (Exception e) {
-            this.writeError("Failed to close database connection: " + e.getMessage(), true);
+        } catch (Exception ex) {
+            this.writeError("Failed to close database connection: " + ex.getMessage(), true);
         }
     }
 
@@ -80,9 +80,7 @@ public class MySQL extends Database {
     @Override
     public boolean checkConnection() { // http://xenregister.bukkit.org/threads/lib-tut-mysql-sqlite-bukkit-drivers.33849/page-4#post-701550
         //Connection connection = this.open();
-        if (connection != null)
-            return true;
-        return false;
+        return (connection != null);
     }
 
     @Override
@@ -106,8 +104,8 @@ public class MySQL extends Database {
             }
             //connection.close();
             return result;
-        } catch (SQLException e) {
-            this.writeError("Error in SQL query: " + e.getMessage(), false);
+        } catch (SQLException ex) {
+            this.writeError("Error in SQL query: " + ex.getMessage(), false);
         }
         return result;
     }
@@ -115,16 +113,16 @@ public class MySQL extends Database {
     @Override
     public PreparedStatement prepare(String query) {
         //Connection connection = null;
-        PreparedStatement ps = null;
+        PreparedStatement preparedStatement = null;
         try {
             //connection = open();
-            ps = connection.prepareStatement(query);
-            return ps;
-        } catch (SQLException e) {
-            if (!e.toString().contains("not return ResultSet"))
-                this.writeError("Error in SQL prepare() query: " + e.getMessage(), false);
+            preparedStatement = connection.prepareStatement(query);
+            return preparedStatement;
+        } catch (SQLException ex) {
+            if (!ex.toString().contains("not return ResultSet"))
+                this.writeError("Error in SQL prepare() query: " + ex.getMessage(), false);
         }
-        return ps;
+        return preparedStatement;
     }
 
     @Override
@@ -140,11 +138,11 @@ public class MySQL extends Database {
             statement = connection.createStatement();
             statement.execute(query);
             return true;
-        } catch (SQLException e) {
-            this.writeError(e.getMessage(), true);
+        } catch (SQLException ex) {
+            this.writeError(ex.getMessage(), true);
             return false;
-        } catch (Exception e) {
-            this.writeError(e.getMessage(), true);
+        } catch (Exception ex) {
+            this.writeError(ex.getMessage(), true);
             return false;
         }
     }
@@ -158,21 +156,17 @@ public class MySQL extends Database {
 
             ResultSet result = statement.executeQuery("SELECT * FROM " + table);
 
-            if (result == null)
-                return false;
-            if (result != null)
-                return true;
-        } catch (SQLException e) {
-            if (e.getMessage().contains("exist")) {
+            return (result == null);
+        } catch (SQLException ex) {
+            if (ex.getMessage().contains("exist")) {
                 return false;
             } else {
-                this.writeError("Error in SQL query: " + e.getMessage(), false);
+                this.writeError("Error in SQL query: " + ex.getMessage(), false);
             }
         }
 
 
-        if (query("SELECT * FROM " + table) == null) return true;
-        return false;
+        return (query("SELECT * FROM " + table) == null);
     }
 
     @Override
@@ -192,8 +186,8 @@ public class MySQL extends Database {
             statement.executeUpdate(query);
 
             return true;
-        } catch (SQLException e) {
-            if (!e.toString().contains("not return ResultSet"))
+        } catch (SQLException ex) {
+            if (!ex.toString().contains("not return ResultSet"))
                 return false;
         }
         return false;
