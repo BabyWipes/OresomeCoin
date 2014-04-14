@@ -20,6 +20,15 @@ public class OresomeCoin extends JavaPlugin {
     public static Map<String, Wallet> onlineWallets = new HashMap<String, Wallet>();
 
     public void onEnable() {
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdir();
+            saveDefaultConfig();
+        }
+
+        if (getConfig() == null) {
+            saveDefaultConfig();
+        }
+
         instance = this;
         SQLManager.setupDatabase();
     }

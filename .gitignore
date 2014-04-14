@@ -75,6 +75,7 @@ pip-log.txt
 /bin
 /dist
 /manifest.mf
+MANIFEST.MF
 
 /world
 

@@ -21,7 +21,7 @@ public class CommandHandler {
             min = 1,
             max = 2)
     @CommandPermissions({"oresomecoin.transact"})
-    public void privacy(CommandContext args, CommandSender sender) {
+    public void transact(CommandContext args, CommandSender sender) {
         if (sender instanceof Player) {
             if (!args.getString(0).equals("") && !args.getString(0).equals(" ")) {
                 if (Bukkit.getPlayer(args.getString(0)) != null) {

@@ -37,7 +37,7 @@ public class SQLManager {
 
                     if (!mysql.checkTable("wallets")) {
                         plugin.getLogger().info("Creating table 'wallets' in database " + mysql_db);
-                        mysql.createTable("CREATE TABLE wallets ( id int NOT NULL AUTO_INCREMENT, owner VARCHAR(32) NOT NULL, balance FLOAT NOT NULL, PRIMARY KEY (id) ) ENGINE=MyISAM;");
+                        mysql.createTable("CREATE TABLE wallets ( uuid string NOT NULL AUTO_INCREMENT, balance FLOAT NOT NULL, PRIMARY KEY (uuid) ) ENGINE=MyISAM;");
                     }
 
                 } else {

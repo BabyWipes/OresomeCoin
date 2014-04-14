@@ -58,6 +58,8 @@ public class Transaction {
                 fromWallet.withdrawCoins(this.getAmount());
                 toWallet.depositCoins(this.getAmount());
                 Bukkit.getPluginManager().callEvent(new PlayerTransactionEvent(this.from, this.to, this.amount));
+                fromWallet.writeToDatabase();
+                toWallet.writeToDatabase();
                 log();
                 if (this.amount > 1) {
                     return "You paid " + this.getTo().getDisplayName() + " " + this.amount + " OresomeCoins!";
