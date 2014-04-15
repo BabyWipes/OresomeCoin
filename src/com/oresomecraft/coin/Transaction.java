@@ -12,7 +12,7 @@ import java.util.Date;
 
 public class Transaction {
 
-    private Player from, to;
+    private Wallet from, to;
     private int amount;
     private long timeInMills;
     private String time;
@@ -22,7 +22,7 @@ public class Transaction {
     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     Date date = new Date();
 
-    public Transaction(Player from, Player to, int amount) {
+    public Transaction(Wallet from, Wallet to, int amount) {
         this.from = from;
         this.to = to;
         this.amount = amount;
@@ -30,11 +30,11 @@ public class Transaction {
         this.time = dateFormat.format(date);
     }
 
-    public Player getFrom() {
+    public Wallet getFrom() {
         return this.from;
     }
 
-    public Player getTo() {
+    public Wallet getTo() {
         return this.to;
     }
 

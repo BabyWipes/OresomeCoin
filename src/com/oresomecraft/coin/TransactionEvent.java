@@ -2,26 +2,32 @@ package com.oresomecraft.coin;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-public class PlayerTransactionEvent extends PlayerEvent implements Cancellable {
+public class TransactionEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private Player target;
+    private Wallet fromWallet;
+    private Wallet toWallet;
     private int amount;
 
     private boolean cancelled;
 
-    public PlayerTransactionEvent(Player player, Player target, int amount) {
-        super(player);
-        this.target = target;
+    public TransactionEvent(Wallet fromWallet, Wallet toWallet, int amount) {
+        this.fromWallet = fromWallet;
+        this.toWallet = toWallet;
         this.amount = amount;
     }
 
-    public Player getTarget() {
-        return this.target;
+    public Wallet getFromWallet() {
+        return this.fromWallet;
+    }
+
+    public Wallet getToWallet() {
+        return this.toWallet;
     }
 
     public int getAmount() {

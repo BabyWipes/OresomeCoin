@@ -7,8 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
-public class CommandHandler {
+public class CommandHandler implements Listener {
     OresomeCoin plugin;
 
     public CommandHandler(OresomeCoin pl) {
@@ -27,7 +28,8 @@ public class CommandHandler {
                 if (!args.getString(0).equals("") && !args.getString(0).equals(" ")) {
                     if (Bukkit.getPlayer(args.getString(0)) != null && Bukkit.getPlayer(args.getString(0)).isOnline()) {
                         if (Integer.parseInt(args.getString(1)) > 0) {
-                            Transaction transaction = new Transaction((Player) sender, Bukkit.getPlayer(args.getString(0)), Integer.parseInt(args.getString(1)));
+                            Player initiator = (Player) sender;
+                            Transaction transaction = new Transaction(OresomeCoin.onlineWallets.get(initiator.getUniqueId().toString()), OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(0)).getUniqueId().toString()), Integer.parseInt(args.getString(1)));
                             sender.sendMessage(SQLManager.executeTransaction(transaction));
                         } else {
                             sender.sendMessage(ChatColor.RED + "You can't pay somebody 0 coins!!");
@@ -41,6 +43,6 @@ public class CommandHandler {
             } else {
                 sender.sendMessage(ChatColor.RED + "Please specify a player and an amount to transact!");
             }
-        }
+        } //TODO: Add support for bank/oresomecraft wallet
     }
 }
