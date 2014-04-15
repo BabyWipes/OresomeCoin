@@ -23,19 +23,23 @@ public class CommandHandler {
     @CommandPermissions({"oresomecoin.transact"})
     public void transact(CommandContext args, CommandSender sender) {
         if (sender instanceof Player) {
-            if (!args.getString(0).equals("") && !args.getString(0).equals(" ")) {
-                if (Bukkit.getPlayer(args.getString(0)) != null) {
-                    if (Integer.parseInt(args.getString(1)) > 0) {
-                        Transaction transaction = new Transaction((Player) sender, Bukkit.getPlayer(args.getString(0)), Integer.parseInt(args.getString(1)));
-                        sender.sendMessage(ChatColor.GOLD + transaction.execute());
+            if (args.argsLength() == 2) {
+                if (!args.getString(0).equals("") && !args.getString(0).equals(" ")) {
+                    if (Bukkit.getPlayer(args.getString(0)) != null && Bukkit.getPlayer(args.getString(0)).isOnline()) {
+                        if (Integer.parseInt(args.getString(1)) > 0) {
+                            Transaction transaction = new Transaction((Player) sender, Bukkit.getPlayer(args.getString(0)), Integer.parseInt(args.getString(1)));
+                            sender.sendMessage(SQLManager.executeTransaction(transaction));
+                        } else {
+                            sender.sendMessage(ChatColor.RED + "You can't pay somebody 0 coins!!");
+                        }
                     } else {
-                        sender.sendMessage(ChatColor.RED + "You can't pay somebody 0 coins!!");
+                        sender.sendMessage(ChatColor.RED + "The player you're trying to pay doesn't seem to be online!");
                     }
                 } else {
-                    sender.sendMessage(ChatColor.RED + "The player you're trying to pay doesn't seem to be online!");
+                    sender.sendMessage(ChatColor.RED + "Please enter a valid player name!");
                 }
             } else {
-                sender.sendMessage(ChatColor.RED + "Please enter a valid player name!");
+                sender.sendMessage(ChatColor.RED + "Please specify a player and an amount to transact!");
             }
         }
     }

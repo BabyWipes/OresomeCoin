@@ -84,10 +84,6 @@
             <url>http://assets.oresomecraft.com/maven</url>
         </repository>
         <repository>
-            <id>SpigotMC</id>
-            <url>http://repo.md-5.net/content/groups/public/</url>
-        </repository>
-        <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>

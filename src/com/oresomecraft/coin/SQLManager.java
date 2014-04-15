@@ -2,7 +2,10 @@ package com.oresomecraft.coin;
 
 import com.oresomecraft.coin.database.MySQL;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -82,7 +85,7 @@ public class SQLManager {
     public static void generateWallet(UUID userId) {
         if (!hasWallet(userId)) {
             mysql.open();
-            mysql.query("INSERT INTO wallets WHERE uuid = '" + userId.toString() + "' AND balance = 0");
+            mysql.query("INSERT INTO wallets ( uuid, balance ) VALUES ( " + userId.toString() + ", 0 );");
             Wallet wallet = new Wallet(userId, 0);
             OresomeCoin.onlineWallets.put(userId.toString(), wallet);
             plugin.getLogger().info("Successfully created a wallet for " + userId.toString());
@@ -90,6 +93,58 @@ public class SQLManager {
         } else {
             plugin.getLogger().warning("Attempted to create a wallet but the UUID already has a wallet attached.");
             plugin.getLogger().warning("UUID = " + userId.toString());
+        }
+    }
+
+    public static void pushWallet(Wallet wallet) {
+        mysql.open();
+        mysql.query("INSERT INTO wallets ( uuid, balance ) VALUES ( " + wallet.getUserId() + ", " + wallet.getBalance() + " );");
+        plugin.getLogger().info("Successfully pushed a Wallet to the database! [" + wallet.getUserId() + "]");
+        mysql.close();
+    }
+
+    public static String executeTransaction(Transaction transaction) {
+        if (transaction.getFrom().getUniqueId() != transaction.getTo().getUniqueId()) {
+            if (SQLManager.getWallet(transaction.getFrom().getUniqueId()) != null && SQLManager.getWallet(transaction.getTo().getUniqueId()) != null) {
+                Wallet fromWallet = SQLManager.getWallet(transaction.getFrom().getUniqueId());
+                Wallet toWallet = SQLManager.getWallet(transaction.getTo().getUniqueId());
+
+                if (fromWallet.getBalance() >= transaction.getAmount()) {
+                    fromWallet.withdrawCoins(transaction.getAmount());
+                    toWallet.depositCoins(transaction.getAmount());
+                    Bukkit.getPluginManager().callEvent(new PlayerTransactionEvent(transaction.getFrom(), transaction.getTo(), transaction.getAmount()));
+                    fromWallet.writeToDatabase();
+                    toWallet.writeToDatabase();
+                    logTransaction(transaction);
+                    if (transaction.getAmount() > 1) {
+                        return ChatColor.GREEN + "You paid " + transaction.getTo().getDisplayName() + " " + transaction.getAmount() + " OresomeCoins!";
+                    } else {
+                        return ChatColor.GREEN + "You paid " + transaction.getTo().getDisplayName() + " " + transaction.getAmount() + " OresomeCoin!";
+                    }
+                } else {
+                    return ChatColor.RED + "You don't have enough OresomeCoin to carry out this transaction!";
+                }
+            } else {
+                return ChatColor.RED + "The player you're attempting to pay doesn't seem to be online!";
+            }
+        } else {
+            return ChatColor.RED + "You can't pay yourself!";
+        }
+    }
+
+    public static void logTransaction(Transaction transaction) {
+        if (transaction.getAmount() > 1) {
+            plugin.getLogger().info(transaction.getFrom().getName() + " just paid " + transaction.getTo().getName() + " " + transaction.getAmount() + " OresomeCoins!");
+        } else {
+            plugin.getLogger().info(transaction.getFrom().getName() + " just paid " + transaction.getTo().getName() + " " + transaction.getAmount() + " OresomeCoin!");
+        }
+        try {
+            FileWriter writer = new FileWriter("transactions.log");
+            writer.append("[" + transaction.getTime() + "] Transaction from " + transaction.getFrom().getName() + " to " + transaction.getTo().getName() + " of " + transaction.getAmount() + " OresomeCoins. [" + transaction.getFrom().getUniqueId() + "] [" + transaction.getTo().getUniqueId() + "] \n");
+            writer.flush();
+            writer.close();
+        } catch (IOException ex) {
+            plugin.getLogger().warning("An IOException occured while attempting to log a transaction!");
         }
     }
 }

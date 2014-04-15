@@ -13,7 +13,7 @@ public class Wallet {
     private String owner;
     private double balance;
 
-    public UUID getID() {
+    public UUID getUserId() {
         return this.userId;
     }
 
@@ -38,7 +38,7 @@ public class Wallet {
     }
 
     synchronized void writeToDatabase() {
-        // TODO: write/save into to data base
+        SQLManager.pushWallet(this);
     }
 
 }
