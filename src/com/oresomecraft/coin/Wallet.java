@@ -1,5 +1,7 @@
 package com.oresomecraft.coin;
 
+import org.bukkit.Bukkit;
+
 import java.util.UUID;
 
 public class Wallet {
@@ -7,6 +9,7 @@ public class Wallet {
     public Wallet(UUID userId, int balance) {
         this.userId = userId;
         this.balance = balance;
+        this.owner = Bukkit.getPlayer(userId).getName();
     }
 
     private UUID userId;

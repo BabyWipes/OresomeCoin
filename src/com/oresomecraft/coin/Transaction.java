@@ -17,8 +17,6 @@ public class Transaction {
     private long timeInMills;
     private String time;
 
-    static OresomeCoin plugin = OresomeCoin.getInstance();
-
     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     Date date = new Date();
 

@@ -8,10 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.UUID;
 
 public class SQLManager implements Listener {
@@ -62,15 +60,10 @@ public class SQLManager implements Listener {
     public static void pushWallet(final Wallet wallet) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
             public void run() {
-                try {
-                    Connection connection = mysql.open();
-                    Statement statement = connection.createStatement();
-                    statement.executeUpdate("UPDATE wallets ( 'uuid', 'balance' ) VALUES ( '" + wallet.getUserId() + "', '" + wallet.getBalance() + "' );");
-                    plugin.getLogger().info("Successfully pushed a Wallet to the database! [" + wallet.getUserId() + "]");
-                    connection.close();
-                } catch (SQLException ex) {
-                    plugin.getLogger().warning("An SQLException occured when trying to push a wallet's contents to the database! [" + wallet.getUserId() + "]");
-                }
+                mysql.open();
+                mysql.query("UPDATE wallets SET balance = " + wallet.getBalance() + " WHERE uuid= '" + wallet.getUserId().toString() + "';");
+                plugin.getLogger().info("Successfully pushed a Wallet to the database! [" + wallet.getUserId() + "]");
+                mysql.close();
             }
         });
     }
@@ -116,14 +109,9 @@ public class SQLManager implements Listener {
                 } else {
                     plugin.getLogger().info(Bukkit.getPlayer(transaction.getFrom().getUserId()).getDisplayName() + " just paid " + Bukkit.getPlayer(transaction.getTo().getUserId()).getName() + " " + transaction.getAmount() + " OresomeCoin!");
                 }
-                try {
-                    Connection connection = mysql.open();
-                    Statement statement = connection.createStatement();
-                    statement.executeUpdate("INSERT INTO transactions ( 'fromId', 'toId', 'amount' ) VALUES ( '" + transaction.getFrom().getUserId() + "', '" + transaction.getFrom().getUserId() + "', '" + transaction.getAmount() + "', '" + transaction.getTime() + "' );");
-                    connection.close();
-                } catch (SQLException ex) {
-                    plugin.getLogger().warning("An SQLException occured while attempting to log a transaction!");
-                }
+                mysql.open();
+                mysql.query("INSERT INTO transactions ( fromId, toId, amount ) VALUES ( '" + transaction.getFrom().getUserId() + "', '" + transaction.getFrom().getUserId() + "', " + transaction.getAmount() + ", '" + transaction.getTime() + "' );");
+                mysql.close();
             }
         });
     }
@@ -135,18 +123,20 @@ public class SQLManager implements Listener {
                 UUID userId = event.getPlayer().getUniqueId();
                 if (OresomeCoin.onlineWallets.get(userId.toString()) != null) return;
                 try {
-                    Connection connection = mysql.open();
-                    Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery("SELECT * FROM wallets WHERE uuid = '" + userId.toString() + "';");
-                    resultSet.next();
-                    if (resultSet.getString("uuid") != null && !resultSet.getString("uuid").equals(" ") && !resultSet.getString("uuid").equals("")) {
-                        OresomeCoin.onlineWallets.put(userId.toString(), new Wallet(userId, resultSet.getInt("balance")));
+                    mysql.open();
+                    ResultSet resultSet = mysql.query("SELECT * FROM wallets WHERE uuid = '" + userId.toString() + "';");
+                    if (resultSet.isBeforeFirst()) {
+                        resultSet.next();
+                        String databaseId = resultSet.getString("uuid");
+                        if (databaseId != null && !databaseId.equals(" ") && !databaseId.equals("")) {
+                            OresomeCoin.onlineWallets.put(userId.toString(), new Wallet(userId, resultSet.getInt("balance")));
+                        }
                     } else {
-                        statement.executeUpdate("INSERT INTO wallets ( 'uuid', 'balance' ) VALUES ( '" + userId.toString() + "', '0' );");
+                        mysql.query("INSERT INTO wallets ( uuid, balance ) VALUES ( '" + userId.toString() + "', 0 );");
                         Wallet wallet = new Wallet(userId, 0);
                         OresomeCoin.onlineWallets.put(userId.toString(), wallet);
                         plugin.getLogger().info("Successfully created a wallet for " + userId.toString());
-                        connection.close();
+                        mysql.close();
                     }
                 } catch (SQLException ex) {
                     plugin.getLogger().warning("An SQL error occured while attempting to get a UUID's wallet!");
@@ -163,16 +153,11 @@ public class SQLManager implements Listener {
                 UUID userId = event.getPlayer().getUniqueId();
                 Wallet wallet = OresomeCoin.onlineWallets.get(userId.toString());
                 if (wallet != null) {
-                    try {
-                        Connection connection = mysql.open();
-                        Statement statement = connection.createStatement();
-                        statement.executeUpdate("UPDATE wallets ( 'uuid', 'balance' ) VALUES ( '" + wallet.getUserId() + "', '" + wallet.getBalance() + "' );");
-                        plugin.getLogger().info("Successfully pushed a Wallet to the database! [" + wallet.getUserId() + "]");
-                        connection.close();
-                        OresomeCoin.onlineWallets.remove(userId.toString());
-                    } catch (SQLException ex) {
-                        plugin.getLogger().warning("An SQLException occured when trying to push a wallet's contents to the database! [" + wallet.getUserId() + "]");
-                    }
+                    mysql.open();
+                    mysql.query("UPDATE wallets SET balance = " + wallet.getBalance() + " WHERE uuid= '" + userId.toString() + "';");
+                    plugin.getLogger().info("Successfully pushed a Wallet to the database! [" + wallet.getUserId() + "]");
+                    mysql.close();
+                    OresomeCoin.onlineWallets.remove(userId.toString());
                 }
             }
         });
