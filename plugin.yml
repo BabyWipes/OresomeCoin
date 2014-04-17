@@ -1,3 +1,4 @@
 name: OresomeCoin
 main: com.oresomecraft.coin.OresomeCoin
 version: 1.0
+softdepend: [OresomeBattles]

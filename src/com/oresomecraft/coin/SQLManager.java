@@ -101,6 +101,13 @@ public class SQLManager implements Listener {
         }
     }
 
+    public static void giveCoins(final Wallet wallet, final int amount) {
+        wallet.depositCoins(amount);
+        Wallet masterWallet = new Wallet(UUID.fromString("-1"), -1);
+        pushWallet(wallet);
+        logTransaction(new Transaction(masterWallet, wallet, amount));
+    }
+
     public static void logTransaction(final Transaction transaction) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
             public void run() {
@@ -137,6 +144,12 @@ public class SQLManager implements Listener {
                         OresomeCoin.onlineWallets.put(userId.toString(), wallet);
                         plugin.getLogger().info("Successfully created a wallet for " + userId.toString());
                         mysql.close();
+                        if (OresomeCoin.onlineWallets.containsKey(userId.toString())) {
+                            plugin.getLogger().info("DATA STORAGE CONTAINS KEY");
+                        }
+                        if (!OresomeCoin.onlineWallets.containsValue(wallet)) {
+                            plugin.getLogger().info("DATA STORAGE DOES NOT VALUE");
+                        }
                     }
                 } catch (SQLException ex) {
                     plugin.getLogger().warning("An SQL error occured while attempting to get a UUID's wallet!");

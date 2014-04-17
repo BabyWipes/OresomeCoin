@@ -12,6 +12,23 @@
     <version>1.0</version>
     <description>OresomeCraft global economy system</description>
 
+    <scm>
+        <tag>HEAD</tag>
+        <connection>scm:git:git://github.com/OresomeCraft/OresomeCoin.git</connection>
+        <url>https://github.com/OresomeCraft/OresomeCoin</url>
+        <developerConnection>scm:git:ssh://git@github.com:OresomeCraft/OresomeCoin.git</developerConnection>
+    </scm>
+
+    <organization>
+        <name>OresomeCraft</name>
+        <url>http://oresomecraft.com/</url>
+    </organization>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/OresomeCraft/OresomeCoin/issues</url>
+    </issueManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>com.oresomecraft.coin.OresomeCoin</main.class>
@@ -65,19 +82,6 @@
         </plugins>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>LATEST</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>sk89q-command-framework</artifactId>
-            <version>0.3</version>
-        </dependency>
-    </dependencies>
-
     <repositories>
         <repository>
             <id>OresomeCraft</id>
@@ -89,20 +93,21 @@
         </repository>
     </repositories>
 
-    <scm>
-        <tag>HEAD</tag>
-        <connection>scm:git:git://github.com/OresomeCraft/OresomeCoin.git</connection>
-        <url>https://github.com/OresomeCraft/OresomeCoin</url>
-        <developerConnection>scm:git:ssh://git@github.com:OresomeCraft/OresomeCoin.git</developerConnection>
-    </scm>
-
-    <organization>
-        <name>OresomeCraft</name>
-        <url>http://oresomecraft.com/</url>
-    </organization>
-
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/OresomeCraft/OresomeCoin/issues</url>
-    </issueManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>sk89q-command-framework</artifactId>
+            <version>0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.oresomecraft</groupId>
+            <artifactId>OresomeBattlesAPI</artifactId>
+            <version>3.0.5</version>
+        </dependency>
+    </dependencies>
 </project>

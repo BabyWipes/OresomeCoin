@@ -155,8 +155,9 @@ public class MySQL extends Database {
             Statement statement = connection.createStatement();
 
             ResultSet result = statement.executeQuery("SELECT * FROM " + table);
+            result.next();
 
-            return (result == null);
+            return (result != null);
         } catch (SQLException ex) {
             if (ex.getMessage().contains("exist")) {
                 return false;

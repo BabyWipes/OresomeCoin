@@ -13,8 +13,8 @@ public class Wallet {
     }
 
     private UUID userId;
-    private String owner;
     private double balance;
+    private String owner;
 
     public UUID getUserId() {
         return this.userId;
