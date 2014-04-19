@@ -30,7 +30,7 @@ public class CommandHandler implements Listener {
                         if (Integer.parseInt(args.getString(1)) > 0) {
                             Player initiator = (Player) sender;
                             Transaction transaction = new Transaction(OresomeCoin.onlineWallets.get(initiator.getUniqueId().toString()), OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(0)).getUniqueId().toString()), Integer.parseInt(args.getString(1)));
-                            sender.sendMessage(SQLManager.executeTransaction(transaction));
+                            sender.sendMessage(SQLOperations.executeTransaction(transaction));
                         } else {
                             sender.sendMessage(ChatColor.RED + "You can't pay somebody 0 coins!!");
                         }
@@ -61,7 +61,7 @@ public class CommandHandler implements Listener {
                             int amount = Integer.parseInt(args.getString(1));
                             if (OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(1)).getUniqueId().toString()) != null) {
                                 Wallet toWallet = OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(1)).getUniqueId().toString());
-                                SQLManager.giveCoins(toWallet, amount);
+                                SQLOperations.giveCoins(toWallet, amount);
                             } else {
                                 plugin.getLogger().warning("An error occured while trying to fetch a player's wallet from the locally stored wallets!");
                                 sender.sendMessage(ChatColor.RED + "The player you're trying to pay doesn't seem to be online!");

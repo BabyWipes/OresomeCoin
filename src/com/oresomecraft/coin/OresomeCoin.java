@@ -31,7 +31,8 @@ public class OresomeCoin extends JavaPlugin {
         instance = this;
         SQLManager.setupDatabase();
         registerCommands();
-        instance.getServer().getPluginManager().registerEvents(new SQLManager(), this);
+
+        new CoinListener(); // Register events
     }
 
     public void onDisable() {
