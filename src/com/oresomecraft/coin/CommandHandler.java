@@ -9,8 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
-import java.util.UUID;
-
 public class CommandHandler implements Listener {
     OresomeCoin plugin;
 
@@ -61,8 +59,13 @@ public class CommandHandler implements Listener {
                     if (Bukkit.getPlayer(args.getString(0)) != null && Bukkit.getPlayer(args.getString(0)).isOnline()) {
                         if (Integer.parseInt(args.getString(1)) > 0) {
                             int amount = Integer.parseInt(args.getString(1));
-                            Wallet toWallet = OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(1)).getUniqueId().toString());
-                            SQLManager.giveCoins(toWallet, amount);
+                            if (OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(1)).getUniqueId().toString()) != null) {
+                                Wallet toWallet = OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(1)).getUniqueId().toString());
+                                SQLManager.giveCoins(toWallet, amount);
+                            } else {
+                                plugin.getLogger().warning("An error occured while trying to fetch a player's wallet from the locally stored wallets!");
+                                sender.sendMessage(ChatColor.RED + "The player you're trying to pay doesn't seem to be online!");
+                            }
                         } else {
                             sender.sendMessage(ChatColor.RED + "You can't pay somebody 0 coins!!");
                         }

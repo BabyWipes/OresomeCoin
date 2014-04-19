@@ -16,7 +16,6 @@ import java.util.Map;
 public class OresomeCoin extends JavaPlugin {
 
     private static OresomeCoin instance;
-    public int oresomeBankID = -1;
     public static Map<String, Wallet> onlineWallets = new HashMap<String, Wallet>();
 
     public void onEnable() {

@@ -60,6 +60,13 @@ public class SQLManager implements Listener {
     public static void pushWallet(final Wallet wallet) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
             public void run() {
+                mysql_host = plugin.getConfig().getString("mysql.host");
+                mysql_db = plugin.getConfig().getString("mysql.database");
+                mysql_user = plugin.getConfig().getString("mysql.username");
+                mysql_password = plugin.getConfig().getString("mysql.password");
+                mysql_port = plugin.getConfig().getString("mysql.port");
+
+                mysql = new MySQL(plugin.getLogger(), "[OresomeCoin]", mysql_host, mysql_port, mysql_db, mysql_user, mysql_password);
                 mysql.open();
                 mysql.query("UPDATE wallets SET balance = " + wallet.getBalance() + " WHERE uuid= '" + wallet.getUserId().toString() + "';");
                 plugin.getLogger().info("Successfully pushed a Wallet to the database! [" + wallet.getUserId() + "]");
@@ -116,6 +123,13 @@ public class SQLManager implements Listener {
                 } else {
                     plugin.getLogger().info(Bukkit.getPlayer(transaction.getFrom().getUserId()).getDisplayName() + " just paid " + Bukkit.getPlayer(transaction.getTo().getUserId()).getName() + " " + transaction.getAmount() + " OresomeCoin!");
                 }
+                mysql_host = plugin.getConfig().getString("mysql.host");
+                mysql_db = plugin.getConfig().getString("mysql.database");
+                mysql_user = plugin.getConfig().getString("mysql.username");
+                mysql_password = plugin.getConfig().getString("mysql.password");
+                mysql_port = plugin.getConfig().getString("mysql.port");
+
+                mysql = new MySQL(plugin.getLogger(), "[OresomeCoin]", mysql_host, mysql_port, mysql_db, mysql_user, mysql_password);
                 mysql.open();
                 mysql.query("INSERT INTO transactions ( fromId, toId, amount ) VALUES ( '" + transaction.getFrom().getUserId() + "', '" + transaction.getFrom().getUserId() + "', " + transaction.getAmount() + ", '" + transaction.getTime() + "' );");
                 mysql.close();
@@ -130,6 +144,13 @@ public class SQLManager implements Listener {
                 UUID userId = event.getPlayer().getUniqueId();
                 if (OresomeCoin.onlineWallets.get(userId.toString()) != null) return;
                 try {
+                    mysql_host = plugin.getConfig().getString("mysql.host");
+                    mysql_db = plugin.getConfig().getString("mysql.database");
+                    mysql_user = plugin.getConfig().getString("mysql.username");
+                    mysql_password = plugin.getConfig().getString("mysql.password");
+                    mysql_port = plugin.getConfig().getString("mysql.port");
+
+                    mysql = new MySQL(plugin.getLogger(), "[OresomeCoin]", mysql_host, mysql_port, mysql_db, mysql_user, mysql_password);
                     mysql.open();
                     ResultSet resultSet = mysql.query("SELECT * FROM wallets WHERE uuid = '" + userId.toString() + "';");
                     if (resultSet.isBeforeFirst()) {
@@ -144,11 +165,11 @@ public class SQLManager implements Listener {
                         OresomeCoin.onlineWallets.put(userId.toString(), wallet);
                         plugin.getLogger().info("Successfully created a wallet for " + userId.toString());
                         mysql.close();
-                        if (OresomeCoin.onlineWallets.containsKey(userId.toString())) {
+                        if (!OresomeCoin.onlineWallets.containsKey(userId.toString())) {
                             plugin.getLogger().info("DATA STORAGE CONTAINS KEY");
                         }
                         if (!OresomeCoin.onlineWallets.containsValue(wallet)) {
-                            plugin.getLogger().info("DATA STORAGE DOES NOT VALUE");
+                            plugin.getLogger().info("DATA STORAGE DOES NOT CONTAIN VALUE");
                         }
                     }
                 } catch (SQLException ex) {
@@ -166,11 +187,18 @@ public class SQLManager implements Listener {
                 UUID userId = event.getPlayer().getUniqueId();
                 Wallet wallet = OresomeCoin.onlineWallets.get(userId.toString());
                 if (wallet != null) {
+                    mysql_host = plugin.getConfig().getString("mysql.host");
+                    mysql_db = plugin.getConfig().getString("mysql.database");
+                    mysql_user = plugin.getConfig().getString("mysql.username");
+                    mysql_password = plugin.getConfig().getString("mysql.password");
+                    mysql_port = plugin.getConfig().getString("mysql.port");
+
+                    mysql = new MySQL(plugin.getLogger(), "[OresomeCoin]", mysql_host, mysql_port, mysql_db, mysql_user, mysql_password);
                     mysql.open();
                     mysql.query("UPDATE wallets SET balance = " + wallet.getBalance() + " WHERE uuid= '" + userId.toString() + "';");
+                    OresomeCoin.onlineWallets.remove(userId.toString());
                     plugin.getLogger().info("Successfully pushed a Wallet to the database! [" + wallet.getUserId() + "]");
                     mysql.close();
-                    OresomeCoin.onlineWallets.remove(userId.toString());
                 }
             }
         });
