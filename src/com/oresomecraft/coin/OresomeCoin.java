@@ -16,7 +16,8 @@ import java.util.Map;
 public class OresomeCoin extends JavaPlugin {
 
     private static OresomeCoin instance;
-    public static Map<String, Wallet> onlineWallets = new HashMap<String, Wallet>();
+    public static HashMap<String, Wallet> onlineWallets = new HashMap<String, Wallet>();
+    public static HashMap<String, String> balances = new HashMap<String, String>();
 
     public void onEnable() {
         if (!getDataFolder().exists()) {

@@ -4,6 +4,8 @@ import com.oresomecraft.coin.database.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class SQLOperations {
@@ -75,6 +77,32 @@ public class SQLOperations {
                 mysql.open();
                 mysql.query("INSERT INTO transactions ( fromId, toId, amount ) VALUES ( '" + transaction.getFrom().getUserId() + "', '" + transaction.getFrom().getUserId() + "', " + transaction.getAmount() + ", '" + transaction.getTime() + "' );");
                 mysql.close();
+            }
+        });
+    }
+
+    public static void getBalance(final UUID userId) {
+        Bukkit.getScheduler().runTaskAsynchronously(OresomeCoin.getInstance(), new Runnable() {
+            public void run() {
+                try {
+                    MySQL mysql = new MySQL(OresomeCoin.getInstance().getLogger(), "[OresomeCoin]", SQLManager.mysql_host,
+                            SQLManager.mysql_port, SQLManager.mysql_db, SQLManager.mysql_user, SQLManager.mysql_password);
+                    mysql.open();
+                    ResultSet resultSet = mysql.query("SELECT * FROM wallets WHERE uuid = '" + userId.toString() + "';");
+                    if (resultSet.isBeforeFirst()) {
+                        resultSet.next();
+                    }
+                    final int balance = resultSet.getInt("balance");
+                    mysql.close();
+                    OresomeCoin.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(OresomeCoin.getInstance(), new Runnable() {
+                        public void run() {
+                            OresomeCoin.balances.put(userId.toString(), Integer.toString(balance));
+                        }
+                    },20L);
+                } catch (SQLException ex) {
+                    OresomeCoin.getInstance().getLogger().warning("An SQL error occured while attempting to get a UUID's wallet!");
+                    OresomeCoin.getInstance().getLogger().warning("UUID = " + userId.toString());
+                }
             }
         });
     }

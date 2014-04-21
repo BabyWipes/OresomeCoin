@@ -41,7 +41,7 @@ public class Wallet {
     }
 
     synchronized void writeToDatabase() {
-        SQLManager.pushWallet(this);
+        SQLOperations.pushWallet(this);
     }
 
 }

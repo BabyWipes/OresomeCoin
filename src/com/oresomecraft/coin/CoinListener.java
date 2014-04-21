@@ -31,9 +31,8 @@ public class CoinListener implements Listener {
                     if (resultSet.isBeforeFirst()) {
                         resultSet.next();
                         String databaseId = resultSet.getString("uuid");
-                        if (databaseId != null && !databaseId.equals(" ") && !databaseId.equals("")) {
                             OresomeCoin.onlineWallets.put(userId.toString(), new Wallet(userId, resultSet.getInt("balance")));
-                        }
+                        mysql.close();
                     } else {
                         mysql.query("INSERT INTO wallets ( uuid, balance ) VALUES ( '" + userId.toString() + "', 0 );");
                         Wallet wallet = new Wallet(userId, 0);
@@ -41,7 +40,7 @@ public class CoinListener implements Listener {
                         OresomeCoin.getInstance().getLogger().info("Successfully created a wallet for " + userId.toString());
                         mysql.close();
                         if (!OresomeCoin.onlineWallets.containsKey(userId.toString())) {
-                            OresomeCoin.getInstance().getLogger().info("DATA STORAGE CONTAINS KEY");
+                            OresomeCoin.getInstance().getLogger().info("DATA STORAGE DOES NOT CONTAIN KEY");
                         }
                         if (!OresomeCoin.onlineWallets.containsValue(wallet)) {
                             OresomeCoin.getInstance().getLogger().info("DATA STORAGE DOES NOT CONTAIN VALUE");
