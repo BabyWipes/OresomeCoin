@@ -9,20 +9,20 @@ public class Wallet {
     public Wallet(UUID userId, int balance) {
         this.userId = userId;
         this.balance = balance;
-        this.owner = Bukkit.getPlayer(userId).getName();
+        //this.owner = Bukkit.getOfflinePlayer(userId).getName();
     }
 
     private UUID userId;
     private double balance;
-    private String owner;
+    //private String owner;
 
     public UUID getUserId() {
         return this.userId;
     }
 
-    public String getOwner() {
+    /*public String getOwner() {
         return this.owner;
-    }
+    }*/
 
     public double getBalance() {
         return this.balance;

@@ -58,7 +58,7 @@ public class SQLOperations {
 
     public static void giveCoins(final Wallet wallet, final int amount) {
         wallet.depositCoins(amount);
-        Wallet masterWallet = new Wallet(UUID.fromString("-1"), -1);
+        Wallet masterWallet = new Wallet(UUID.fromString("d6938711-6efc-4057-97e5-86aba8f6ed2b"), -1);
         pushWallet(wallet);
         logTransaction(new Transaction(masterWallet, wallet, amount));
     }
@@ -66,22 +66,22 @@ public class SQLOperations {
     public static void logTransaction(final Transaction transaction) {
         Bukkit.getScheduler().runTaskAsynchronously(OresomeCoin.getInstance(), new Runnable() {
             public void run() {
-                if (transaction.getAmount() > 1) {
+                if (transaction.getAmount() > 1 && !transaction.getFrom().getUserId().toString().equals("d6938711-6efc-4057-97e5-86aba8f6ed2b")) {
                     OresomeCoin.getInstance().getLogger().info(Bukkit.getPlayer(transaction.getFrom().getUserId()).getDisplayName() + " just paid " + Bukkit.getPlayer(transaction.getTo().getUserId()).getName() + " " + transaction.getAmount() + " OresomeCoins!");
-                } else {
+                } else if (!transaction.getFrom().getUserId().toString().equals("d6938711-6efc-4057-97e5-86aba8f6ed2b")) {
                     OresomeCoin.getInstance().getLogger().info(Bukkit.getPlayer(transaction.getFrom().getUserId()).getDisplayName() + " just paid " + Bukkit.getPlayer(transaction.getTo().getUserId()).getName() + " " + transaction.getAmount() + " OresomeCoin!");
                 }
 
                 MySQL mysql = new MySQL(OresomeCoin.getInstance().getLogger(), "[OresomeCoin]", SQLManager.mysql_host,
                         SQLManager.mysql_port, SQLManager.mysql_db, SQLManager.mysql_user, SQLManager.mysql_password);
                 mysql.open();
-                mysql.query("INSERT INTO transactions ( fromId, toId, amount ) VALUES ( '" + transaction.getFrom().getUserId() + "', '" + transaction.getFrom().getUserId() + "', " + transaction.getAmount() + ", '" + transaction.getTime() + "' );");
+                mysql.query("INSERT INTO transactions ( fromId, toId, amount, time ) VALUES ( '" + transaction.getFrom().getUserId() + "', '" + transaction.getFrom().getUserId() + "', " + transaction.getAmount() + ", '" + transaction.getTime() + "' );");
                 mysql.close();
             }
         });
     }
 
-    public static void getBalance(final UUID userId) {
+    /*public static void getBalance(final UUID userId) {
         Bukkit.getScheduler().runTaskAsynchronously(OresomeCoin.getInstance(), new Runnable() {
             public void run() {
                 try {
@@ -105,6 +105,6 @@ public class SQLOperations {
                 }
             }
         });
-    }
+    }*/
 
 }
