@@ -33,6 +33,7 @@ public class CommandHandler implements Listener {
                             Player initiator = (Player) sender;
                             Transaction transaction = new Transaction(OresomeCoin.onlineWallets.get(initiator.getUniqueId().toString()), OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(0)).getUniqueId().toString()), Integer.parseInt(args.getString(1)));
                             sender.sendMessage(SQLOperations.executeTransaction(transaction));
+                            Bukkit.getPlayer(args.getString(0)).sendMessage(ChatColor.GREEN + "You received " + Integer.parseInt(args.getString(1) + " OresomeCoins from " + initiator.getDisplayName()));
                         } else {
                             sender.sendMessage(ChatColor.RED + "You can't pay somebody 0 coins!!");
                         }
@@ -65,6 +66,7 @@ public class CommandHandler implements Listener {
                                 //if (OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(1)).getUniqueId().toString()) != null) {
                                     Wallet toWallet = OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(1)).getUniqueId().toString());
                                     SQLOperations.giveCoins(toWallet, amount);
+                                Bukkit.getPlayer(args.getString(1)).sendMessage(ChatColor.GREEN + "You just received " + amount + " OresomeCoins!");
                                 /*} else {
                                     plugin.getLogger().warning("An error occured while trying to fetch a player's wallet from the locally stored wallets!");
                                     sender.sendMessage(ChatColor.RED + "The player you're trying to pay doesn't seem to be online!");
@@ -96,17 +98,18 @@ public class CommandHandler implements Listener {
             max = 1)
     @CommandPermissions({"oresomecoin.checkcoins"})
     public void checkCoins(CommandContext args, CommandSender sender) {
-        if (args.argsLength() == 1 && sender.hasPermission("oresomecoin.checkcoins.other")) {
+        if (args.argsLength() == 1 && sender.hasPermission("oresomecoin.checkcoins.other") && !args.getString(0).equals(sender.getName())) {
             if (!args.getString(0).equals("") && !args.getString(0).equals(" ")) {
-                String userId = Bukkit.getPlayer(args.getString(0)).getUniqueId().toString();
-                SQLOperations.getBalance(UUID.fromString(userId));
-                String balance = OresomeCoin.balances.get(userId);
-                sender.sendMessage(ChatColor.AQUA + args.getString(0) + " has " + balance + " coins!");
-                OresomeCoin.balances.remove(userId);
+                if (isOnline(args.getString(0))) {
+                    int balance = (int) OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(0)).getUniqueId().toString()).getBalance();
+                    sender.sendMessage(ChatColor.AQUA + args.getString(0) + " has " + balance + " coins!");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "The player you're trying to look up doesn't seem to be online!");
+                }
             } else {
                 sender.sendMessage(ChatColor.RED + "Please enter a valid player name!");
             }
-        } else if (args.argsLength() == 0) {
+        } else if (args.argsLength() == 0 || args.getString(0).equals(sender.getName())) {
             if (sender instanceof Player) {
                 int balance = (int) OresomeCoin.onlineWallets.get(((Player) sender).getUniqueId().toString()).getBalance();
                 sender.sendMessage(ChatColor.AQUA + "You have " + balance + " coins!");
@@ -116,5 +119,12 @@ public class CommandHandler implements Listener {
         } else {
             sender.sendMessage(ChatColor.RED + "You don't have permission to check another player's balance!");
         }
+    }
+
+    public boolean isOnline(String playerName) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            return playerName.equals(player.getName());
+        }
+        return false;
     }
 }
