@@ -40,6 +40,7 @@ public class OresomeCoin extends JavaPlugin {
         for (Wallet wallet : onlineWallets.values()) {
             wallet.writeToDatabase();
         }
+        instance = null;
     }
 
     public static OresomeCoin getInstance() {
