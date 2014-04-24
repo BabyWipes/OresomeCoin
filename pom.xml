@@ -84,10 +84,6 @@
 
     <repositories>
         <repository>
-            <id>OresomeCraft</id>
-            <url>http://assets.oresomecraft.com/maven</url>
-        </repository>
-        <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
@@ -103,11 +99,6 @@
             <groupId>com.sk89q</groupId>
             <artifactId>sk89q-command-framework</artifactId>
             <version>0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.oresomecraft</groupId>
-            <artifactId>OresomeBattlesAPI</artifactId>
-            <version>3.0.5</version>
         </dependency>
     </dependencies>
 </project>

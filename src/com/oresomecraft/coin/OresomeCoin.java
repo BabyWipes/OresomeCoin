@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class OresomeCoin extends JavaPlugin {
 

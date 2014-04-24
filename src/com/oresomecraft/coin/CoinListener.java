@@ -30,8 +30,7 @@ public class CoinListener implements Listener {
                     ResultSet resultSet = mysql.query("SELECT * FROM wallets WHERE uuid = '" + userId.toString() + "';");
                     if (resultSet.isBeforeFirst()) {
                         resultSet.next();
-                        String databaseId = resultSet.getString("uuid");
-                            OresomeCoin.onlineWallets.put(userId.toString(), new Wallet(userId, resultSet.getInt("balance")));
+                        OresomeCoin.onlineWallets.put(userId.toString(), new Wallet(userId, resultSet.getInt("balance")));
                         mysql.close();
                     } else {
                         mysql.query("INSERT INTO wallets ( uuid, balance ) VALUES ( '" + userId.toString() + "', 0 );");
@@ -39,12 +38,6 @@ public class CoinListener implements Listener {
                         OresomeCoin.onlineWallets.put(userId.toString(), wallet);
                         OresomeCoin.getInstance().getLogger().info("Successfully created a wallet for " + userId.toString());
                         mysql.close();
-                        if (!OresomeCoin.onlineWallets.containsKey(userId.toString())) {
-                            OresomeCoin.getInstance().getLogger().info("DATA STORAGE DOES NOT CONTAIN KEY");
-                        }
-                        if (!OresomeCoin.onlineWallets.containsValue(wallet)) {
-                            OresomeCoin.getInstance().getLogger().info("DATA STORAGE DOES NOT CONTAIN VALUE");
-                        }
                     }
                 } catch (SQLException ex) {
                     OresomeCoin.getInstance().getLogger().warning("An SQL error occured while attempting to get a UUID's wallet!");

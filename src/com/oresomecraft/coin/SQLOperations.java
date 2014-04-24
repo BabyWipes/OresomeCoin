@@ -4,8 +4,6 @@ import com.oresomecraft.coin.database.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.UUID;
 
 public class SQLOperations {

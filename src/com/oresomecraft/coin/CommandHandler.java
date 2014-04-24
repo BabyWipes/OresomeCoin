@@ -30,8 +30,11 @@ public class CommandHandler implements Listener {
                         if (Integer.parseInt(args.getString(1)) > 0) {
                             Player initiator = (Player) sender;
                             Transaction transaction = new Transaction(OresomeCoin.onlineWallets.get(initiator.getUniqueId().toString()), OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(0)).getUniqueId().toString()), Integer.parseInt(args.getString(1)));
-                            sender.sendMessage(SQLOperations.executeTransaction(transaction));
-                            Bukkit.getPlayer(args.getString(0)).sendMessage(ChatColor.GREEN + "You received " + Integer.parseInt(args.getString(1) + " OresomeCoins from " + initiator.getDisplayName()));
+                            String successMessage = SQLOperations.executeTransaction(transaction);
+                            sender.sendMessage(successMessage);
+                            if ((!successMessage.contains(ChatColor.RED + "You don't have enough OresomeCoin to carry out this transaction!")) && (!successMessage.contains(ChatColor.RED + "The player you're attempting to pay doesn't seem to be online!")) && (!successMessage.contains(ChatColor.RED + "You can't pay yourself!"))) {
+                                Bukkit.getPlayer(args.getString(0)).sendMessage(ChatColor.GREEN + "You received " + transaction.getAmount() + " OresomeCoins from " + initiator.getDisplayName());
+                            }
                         } else {
                             sender.sendMessage(ChatColor.RED + "You can't pay somebody 0 coins!!");
                         }

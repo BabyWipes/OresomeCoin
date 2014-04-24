@@ -2,15 +2,7 @@ package com.oresomecraft.coin;
 
 import com.oresomecraft.coin.database.MySQL;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.UUID;
 
 public class SQLManager implements Listener {
 
@@ -46,7 +38,7 @@ public class SQLManager implements Listener {
                     }
                     if (!mysql.checkTable("transactions")) {
                         plugin.getLogger().info("Creating table 'transactions' in database " + mysql_db);
-                        mysql.createTable("CREATE TABLE transactions ( fromId VARCHAR(255) NOT NULL, toId VARCHAR(255) NOT NULL, amount int NOT NULL, time VARCHAR(32) NOT NULL, PRIMARY KEY (fromId) ) ENGINE=MyISAM;");
+                        mysql.createTable("CREATE TABLE transactions ( fromId VARCHAR(255) NOT NULL, toId VARCHAR(255) NOT NULL, amount int NOT NULL, time VARCHAR(32) NOT NULL, PRIMARY KEY (time) ) ENGINE=MyISAM;");
                     }
                 } else {
                     plugin.getLogger().severe("Error connecting to database, there'll most likely be a lot of console errors!");
