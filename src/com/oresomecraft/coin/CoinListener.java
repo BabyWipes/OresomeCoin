@@ -22,7 +22,9 @@ public class CoinListener implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(OresomeCoin.getInstance(), new Runnable() {
             public void run() {
                 UUID userId = event.getPlayer().getUniqueId();
-                if (OresomeCoin.onlineWallets.get(userId.toString()) != null) return;
+                if (OresomeCoin.onlineWallets.get(userId.toString()) != null) {
+                    OresomeCoin.onlineWallets.remove(userId.toString());
+                }
                 try {
                     MySQL mysql = new MySQL(OresomeCoin.getInstance().getLogger(), "[OresomeCoin]", SQLManager.mysql_host,
                             SQLManager.mysql_port, SQLManager.mysql_db, SQLManager.mysql_user, SQLManager.mysql_password);
@@ -30,11 +32,16 @@ public class CoinListener implements Listener {
                     ResultSet resultSet = mysql.query("SELECT * FROM wallets WHERE uuid = '" + userId.toString() + "';");
                     if (resultSet.isBeforeFirst()) {
                         resultSet.next();
-                        OresomeCoin.onlineWallets.put(userId.toString(), new Wallet(userId, resultSet.getInt("balance")));
+                        OresomeCoin.onlineWallets.put(userId.toString(), new Wallet(resultSet.getInt("id"), resultSet.getInt("balance"), event.getPlayer().getName()));
+                        mysql.query("UPDATE wallets SET name = '" + event.getPlayer().getName() + "' WHERE uuid = '" + userId.toString() + "';");
                         mysql.close();
                     } else {
-                        mysql.query("INSERT INTO wallets ( uuid, balance ) VALUES ( '" + userId.toString() + "', 0 );");
-                        Wallet wallet = new Wallet(userId, 0);
+                        mysql.query("INSERT INTO wallets ( uuid, name, balance ) VALUES ( '" + userId.toString() + "', '" + event.getPlayer().getName() + "', 0 );");
+                        ResultSet walletId = mysql.query("SELECT * FROM wallets WHERE uuid = '" + userId.toString() + "'");
+                        if (walletId.isBeforeFirst()) {
+                            walletId.next();
+                        }
+                        Wallet wallet = new Wallet(walletId.getInt("id"), 0, event.getPlayer().getName());
                         OresomeCoin.onlineWallets.put(userId.toString(), wallet);
                         OresomeCoin.getInstance().getLogger().info("Successfully created a wallet for " + userId.toString());
                         mysql.close();
@@ -59,7 +66,7 @@ public class CoinListener implements Listener {
                     mysql.open();
                     mysql.query("UPDATE wallets SET balance = " + wallet.getBalance() + " WHERE uuid= '" + userId.toString() + "';");
                     OresomeCoin.onlineWallets.remove(userId.toString());
-                    OresomeCoin.getInstance().getLogger().info("Successfully pushed a Wallet to the database! [" + wallet.getUserId() + "]");
+                    OresomeCoin.getInstance().getLogger().info("Successfully pushed a Wallet to the database! [" + wallet.getWalletId() + "]");
                     mysql.close();
                 }
             }

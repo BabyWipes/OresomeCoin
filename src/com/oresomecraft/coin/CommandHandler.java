@@ -36,7 +36,7 @@ public class CommandHandler implements Listener {
                                 Bukkit.getPlayer(args.getString(0)).sendMessage(ChatColor.GREEN + "You received " + transaction.getAmount() + " OresomeCoins from " + initiator.getDisplayName());
                             }
                         } else {
-                            sender.sendMessage(ChatColor.RED + "You can't pay somebody 0 coins!!");
+                            sender.sendMessage(ChatColor.RED + "You can't pay somebody 0 coins!");
                         }
                     } else {
                         sender.sendMessage(ChatColor.RED + "The player you're trying to pay doesn't seem to be online!");

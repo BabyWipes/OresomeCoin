@@ -1,23 +1,27 @@
 package com.oresomecraft.coin;
 
-import java.util.UUID;
-
 public class Wallet {
 
-    public Wallet(UUID userId, int balance) {
-        this.userId = userId;
+    public Wallet(int walletId, int balance, String owner) {
+        this.walletId = walletId;
         this.balance = balance;
+        this.owner = owner;
     }
 
-    private UUID userId;
+    private int walletId;
     private double balance;
+    private String owner;
 
-    public UUID getUserId() {
-        return this.userId;
+    public int getWalletId() {
+        return this.walletId;
     }
 
     public double getBalance() {
         return this.balance;
+    }
+
+    public String getOwner() {
+        return this.owner;
     }
 
     protected void setBalance(double amount) {

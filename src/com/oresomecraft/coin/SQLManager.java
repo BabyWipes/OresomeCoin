@@ -2,9 +2,8 @@ package com.oresomecraft.coin;
 
 import com.oresomecraft.coin.database.MySQL;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
 
-public class SQLManager implements Listener {
+public class SQLManager {
 
     public static MySQL mysql;
     public static String mysql_host;
@@ -34,11 +33,11 @@ public class SQLManager implements Listener {
 
                     if (!mysql.checkTable("wallets")) {
                         plugin.getLogger().info("Creating table 'wallets' in database " + mysql_db);
-                        mysql.createTable("CREATE TABLE wallets ( uuid VARCHAR(255) NOT NULL, balance FLOAT NOT NULL, PRIMARY KEY (uuid) ) ENGINE=MyISAM;");
+                        mysql.createTable("CREATE TABLE wallets ( id int NOT NULL AUTO_INCREMENT, uuid VARCHAR(64) NOT NULL, name VARCHAR(16), balance FLOAT NOT NULL, PRIMARY KEY (id) ) ENGINE=MyISAM;");
                     }
                     if (!mysql.checkTable("transactions")) {
                         plugin.getLogger().info("Creating table 'transactions' in database " + mysql_db);
-                        mysql.createTable("CREATE TABLE transactions ( fromId VARCHAR(255) NOT NULL, toId VARCHAR(255) NOT NULL, amount int NOT NULL, time VARCHAR(32) NOT NULL, PRIMARY KEY (time) ) ENGINE=MyISAM;");
+                        mysql.createTable("CREATE TABLE transactions ( id int NOT NULL AUTO_INCREMENT, fromId int NOT NULL, toId int NOT NULL, amount int NOT NULL, time VARCHAR(32) NOT NULL, PRIMARY KEY (id) ) ENGINE=MyISAM;");
                     }
                 } else {
                     plugin.getLogger().severe("Error connecting to database, there'll most likely be a lot of console errors!");
