@@ -16,7 +16,8 @@ public class OresomeCoin extends JavaPlugin {
 
     private static OresomeCoin instance;
     public static HashMap<String, Wallet> onlineWallets = new HashMap<String, Wallet>();
-    public static HashMap<String, String> balances = new HashMap<String, String>();
+
+    public static final Wallet masterWallet = new Wallet(-1, -1, "OresomeCraft");
 
     public void onEnable() {
         if (!getDataFolder().exists()) {

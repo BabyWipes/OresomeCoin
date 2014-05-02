@@ -34,7 +34,7 @@ public class CommandHandler implements Listener {
                         if (Integer.parseInt(args.getString(1)) > 0) {
                             Player initiator = (Player) sender;
                             Transaction transaction = new Transaction(OresomeCoin.onlineWallets.get(initiator.getUniqueId().toString()), OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(0)).getUniqueId().toString()), Integer.parseInt(args.getString(1)));
-                            String successMessage = SQLOperations.executeTransaction(transaction);
+                            String successMessage = TransactionOperations.executeTransaction(transaction);
                             sender.sendMessage(successMessage);
                             if ((!successMessage.contains(ChatColor.RED + "You don't have enough OresomeCoin to carry out this transaction!")) && (!successMessage.contains(ChatColor.RED + "The player you're attempting to pay doesn't seem to be online!")) && (!successMessage.contains(ChatColor.RED + "You can't pay yourself!"))) {
                                 Bukkit.getPlayer(args.getString(0)).sendMessage(ChatColor.GREEN + "You received " + transaction.getAmount() + " OresomeCoins from " + initiator.getDisplayName());
@@ -69,7 +69,7 @@ public class CommandHandler implements Listener {
                             int amount = Integer.parseInt(args.getString(1));
                             if (OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(0)).getUniqueId().toString()) != null) {
                                 Wallet toWallet = OresomeCoin.onlineWallets.get(Bukkit.getPlayer(args.getString(0)).getUniqueId().toString());
-                                SQLOperations.giveCoins(toWallet, amount);
+                                TransactionOperations.giveCoins(toWallet, amount);
                                 Bukkit.getPlayer(args.getString(0)).sendMessage(ChatColor.GREEN + "You just received " + amount + " OresomeCoins!");
                             } else {
                                 plugin.getLogger().warning("An error occured while trying to fetch a player's wallet from the locally stored wallets!");

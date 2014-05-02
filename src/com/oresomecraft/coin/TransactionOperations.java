@@ -4,7 +4,7 @@ import com.oresomecraft.coin.database.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-public class SQLOperations {
+public class TransactionOperations {
 
     public static void pushWallet(final Wallet wallet) {
         Bukkit.getScheduler().runTaskAsynchronously(OresomeCoin.getInstance(), new Runnable() {
@@ -53,9 +53,14 @@ public class SQLOperations {
 
     public static void giveCoins(final Wallet wallet, final int amount) {
         wallet.depositCoins(amount);
-        Wallet masterWallet = new Wallet(-1, -1, "OresomeCraft");
         pushWallet(wallet);
-        logTransaction(new Transaction(masterWallet, wallet, amount));
+        logTransaction(new Transaction(OresomeCoin.masterWallet, wallet, amount));
+    }
+
+    public static void removeCoins(final Wallet wallet, final int amount) {
+        wallet.withdrawCoins(amount);
+        pushWallet(wallet);
+        logTransaction(new Transaction(OresomeCoin.masterWallet, wallet, amount));
     }
 
     public static void logTransaction(final Transaction transaction) {

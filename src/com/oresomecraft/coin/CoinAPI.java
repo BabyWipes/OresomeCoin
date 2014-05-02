@@ -9,7 +9,17 @@ public class CoinAPI {
      * @param amount The amount of coins to give to a wallet
      */
     public static void giveCoins(Wallet wallet, int amount) {
-        SQLOperations.giveCoins(wallet, amount);
+        TransactionOperations.giveCoins(wallet, amount);
+    }
+
+    /**
+     * Removes a certain amount of coins from a wallet
+     *
+     * @param wallet The wallet to remove coins from
+     * @param amount The amount of coins to remove
+     */
+    public static void removeCoins(Wallet wallet, int amount) {
+        TransactionOperations.removeCoins(wallet, amount);
     }
 
     /**
@@ -20,7 +30,7 @@ public class CoinAPI {
      * @param transaction The Transaction object to execute
      */
     public static void executeTransaction(Transaction transaction) {
-        SQLOperations.executeTransaction(transaction);
+        TransactionOperations.executeTransaction(transaction);
     }
 
     /**
@@ -29,7 +39,7 @@ public class CoinAPI {
      * @param wallet The Wallet to synchronise
      */
     public static void pushWallet(Wallet wallet) {
-        SQLOperations.pushWallet(wallet);
+        TransactionOperations.pushWallet(wallet);
     }
 
     /**
@@ -38,6 +48,6 @@ public class CoinAPI {
      * @param transaction The Transaction to log
      */
     public static void logTransaction(Transaction transaction) {
-        SQLOperations.logTransaction(transaction);
+        TransactionOperations.logTransaction(transaction);
     }
 }

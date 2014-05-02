@@ -70,7 +70,7 @@ public class Wallet {
      * Synchronises the wallet with the MySQL database
      */
     synchronized void writeToDatabase() {
-        SQLOperations.pushWallet(this);
+        TransactionOperations.pushWallet(this);
     }
 
 }

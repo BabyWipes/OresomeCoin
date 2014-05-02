@@ -19,7 +19,7 @@ public class CoinListener implements Listener {
 
     @EventHandler
     public void onTransaction(TransactionEvent event) {
-        SQLOperations.logTransaction(event.getTransaction());
+        TransactionOperations.logTransaction(event.getTransaction());
     }
 
     @EventHandler
