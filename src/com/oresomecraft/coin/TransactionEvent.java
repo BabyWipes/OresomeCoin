@@ -8,20 +8,25 @@ public class TransactionEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private Wallet fromWallet;
-    private Wallet toWallet;
-    private int amount;
+    private Transaction transaction;
 
     private boolean cancelled;
 
-    public TransactionEvent(Wallet fromWallet, Wallet toWallet, int amount) {
-        this.fromWallet = fromWallet;
-        this.toWallet = toWallet;
-        this.amount = amount;
+    public TransactionEvent(Transaction transaction) {
+        this.transaction = transaction;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    /**
+     * Gets the Transaction object that was created when executing the transaction
+     *
+     * @return A Transaction object
+     */
+    public Transaction getTransaction() {
+        return this.transaction;
     }
 
     /**
@@ -30,7 +35,7 @@ public class TransactionEvent extends Event implements Cancellable {
      * @return The wallet owned by the transaction initiator
      */
     public Wallet getFromWallet() {
-        return this.fromWallet;
+        return this.transaction.getFrom();
     }
 
     /**
@@ -39,7 +44,7 @@ public class TransactionEvent extends Event implements Cancellable {
      * @return The wallet owned by the player to receive the transaction
      */
     public Wallet getToWallet() {
-        return this.toWallet;
+        return this.transaction.getTo();
     }
 
     /**
@@ -48,7 +53,7 @@ public class TransactionEvent extends Event implements Cancellable {
      * @return The amount to be transferred in the transaction
      */
     public int getAmount() {
-        return this.amount;
+        return this.transaction.getAmount();
     }
 
     @Override

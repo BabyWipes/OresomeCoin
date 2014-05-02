@@ -18,6 +18,11 @@ public class CoinListener implements Listener {
     }
 
     @EventHandler
+    public void onTransaction(TransactionEvent event) {
+        SQLOperations.logTransaction(event.getTransaction());
+    }
+
+    @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event) {
         Bukkit.getScheduler().runTaskAsynchronously(OresomeCoin.getInstance(), new Runnable() {
             public void run() {

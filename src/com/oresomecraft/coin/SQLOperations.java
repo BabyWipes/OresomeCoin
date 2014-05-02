@@ -29,10 +29,9 @@ public class SQLOperations {
                     if (fromWallet.getBalance() >= transaction.getAmount()) {
                         fromWallet.withdrawCoins(transaction.getAmount());
                         toWallet.depositCoins(transaction.getAmount());
-                        Bukkit.getPluginManager().callEvent(new TransactionEvent(transaction.getFrom(), transaction.getTo(), transaction.getAmount()));
+                        Bukkit.getPluginManager().callEvent(new TransactionEvent(transaction));
                         fromWallet.writeToDatabase();
                         toWallet.writeToDatabase();
-                        logTransaction(transaction);
                         if (transaction.getAmount() > 1) {
                             return ChatColor.GREEN + "You paid " + transaction.getTo().getOwner() + " " + transaction.getAmount() + " OresomeCoins!";
                         } else {
@@ -76,31 +75,4 @@ public class SQLOperations {
             }
         });
     }
-
-    /*public static void getBalance(final UUID userId) {
-        Bukkit.getScheduler().runTaskAsynchronously(OresomeCoin.getInstance(), new Runnable() {
-            public void run() {
-                try {
-                    MySQL mysql = new MySQL(OresomeCoin.getInstance().getLogger(), "[OresomeCoin]", SQLManager.mysql_host,
-                            SQLManager.mysql_port, SQLManager.mysql_db, SQLManager.mysql_user, SQLManager.mysql_password);
-                    mysql.open();
-                    ResultSet resultSet = mysql.query("SELECT * FROM wallets WHERE uuid = '" + userId.toString() + "';");
-                    if (resultSet.isBeforeFirst()) {
-                        resultSet.next();
-                    }
-                    final int balance = resultSet.getInt("balance");
-                    mysql.close();
-                    OresomeCoin.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(OresomeCoin.getInstance(), new Runnable() {
-                        public void run() {
-                            OresomeCoin.balances.put(userId.toString(), Integer.toString(balance));
-                        }
-                    },20L);
-                } catch (SQLException ex) {
-                    OresomeCoin.getInstance().getLogger().warning("An SQL error occured while attempting to get a UUID's wallet!");
-                    OresomeCoin.getInstance().getLogger().warning("UUID = " + userId.toString());
-                }
-            }
-        });
-    }*/
-
 }
