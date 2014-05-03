@@ -19,6 +19,7 @@ public class OresomeCoin extends JavaPlugin {
 
     public static final Wallet masterWallet = new Wallet(-1, -1, "OresomeCraft");
 
+    @Override
     public void onEnable() {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
@@ -36,6 +37,7 @@ public class OresomeCoin extends JavaPlugin {
         new CoinListener(); // Register events
     }
 
+    @Override
     public void onDisable() {
         saveConfig();
         for (Wallet wallet : onlineWallets.values()) {
