@@ -1,5 +1,7 @@
 package com.oresomecraft.coin;
 
+import org.bukkit.entity.Player;
+
 public class CoinAPI {
 
     /**
@@ -49,5 +51,15 @@ public class CoinAPI {
      */
     public static void logTransaction(Transaction transaction) {
         TransactionOperations.logTransaction(transaction);
+    }
+
+    /**
+     * Gets a player's wallet. This method MUST be run asynchronously
+     *
+     * @param player The wallet's owner
+     * @return The player's wallet
+     */
+    public static Wallet getWallet(Player player) {
+        return TransactionOperations.getWallet(player);
     }
 }

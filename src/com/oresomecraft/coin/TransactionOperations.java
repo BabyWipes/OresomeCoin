@@ -3,6 +3,10 @@ package com.oresomecraft.coin;
 import com.oresomecraft.coin.database.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class TransactionOperations {
 
@@ -61,6 +65,24 @@ public class TransactionOperations {
         wallet.withdrawCoins(amount);
         pushWallet(wallet);
         logTransaction(new Transaction(OresomeCoin.masterWallet, wallet, amount));
+    }
+
+    public static Wallet getWallet(final Player player) {
+        try {
+            MySQL mysql = new MySQL(OresomeCoin.getInstance().getLogger(), "[OresomeCoin]", SQLManager.mysql_host,
+                    SQLManager.mysql_port, SQLManager.mysql_db, SQLManager.mysql_user, SQLManager.mysql_password);
+            mysql.open();
+            ResultSet resultSet = mysql.query("SELECT * FROM wallets WHERE uuid = '" + player.getUniqueId().toString() + "';");
+            if (resultSet.isBeforeFirst()) {
+                resultSet.next();
+                mysql.close();
+                return new Wallet(resultSet.getInt("id"), resultSet.getInt("balance"), resultSet.getString("name"));
+            }
+        } catch (SQLException ex) {
+            OresomeCoin.getInstance().getLogger().warning("An SQL error occured while attempting to get a UUID's wallet!");
+            OresomeCoin.getInstance().getLogger().warning("UUID = " + player.getUniqueId().toString());
+        }
+        return null;
     }
 
     public static void logTransaction(final Transaction transaction) {
