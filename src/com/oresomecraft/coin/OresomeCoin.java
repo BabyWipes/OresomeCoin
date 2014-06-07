@@ -1,5 +1,7 @@
 package com.oresomecraft.coin;
 
+import com.oresomecraft.coin.playerinterfaces.CoinListener;
+import com.oresomecraft.coin.playerinterfaces.CommandHandler;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import org.bukkit.ChatColor;

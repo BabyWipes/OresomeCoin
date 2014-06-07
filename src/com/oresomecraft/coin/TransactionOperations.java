@@ -1,6 +1,8 @@
 package com.oresomecraft.coin;
 
 import com.oresomecraft.coin.database.MySQL;
+import com.oresomecraft.coin.playerinterfaces.Transaction;
+import com.oresomecraft.coin.playerinterfaces.TransactionEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -97,7 +99,7 @@ public class TransactionOperations {
                 MySQL mysql = new MySQL(OresomeCoin.getInstance().getLogger(), "[OresomeCoin]", SQLManager.mysql_host,
                         SQLManager.mysql_port, SQLManager.mysql_db, SQLManager.mysql_user, SQLManager.mysql_password);
                 mysql.open();
-                mysql.query("INSERT INTO transactions ( fromId, toId, amount, time ) VALUES ( '" + transaction.getFrom().getWalletId() + "', '" + transaction.getFrom().getWalletId() + "', " + transaction.getAmount() + ", '" + transaction.getTime() + "' );");
+                mysql.query("INSERT INTO playerinterfaces ( fromId, toId, amount, time ) VALUES ( '" + transaction.getFrom().getWalletId() + "', '" + transaction.getFrom().getWalletId() + "', " + transaction.getAmount() + ", '" + transaction.getTime() + "' );");
                 mysql.close();
             }
         });

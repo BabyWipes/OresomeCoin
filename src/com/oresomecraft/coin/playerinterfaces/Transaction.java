@@ -1,4 +1,6 @@
-package com.oresomecraft.coin;
+package com.oresomecraft.coin.playerinterfaces;
+
+import com.oresomecraft.coin.Wallet;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

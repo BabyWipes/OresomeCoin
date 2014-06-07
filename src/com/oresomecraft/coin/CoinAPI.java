@@ -1,5 +1,6 @@
 package com.oresomecraft.coin;
 
+import com.oresomecraft.coin.playerinterfaces.Transaction;
 import org.bukkit.entity.Player;
 
 public class CoinAPI {

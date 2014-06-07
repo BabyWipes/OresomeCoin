@@ -1,5 +1,9 @@
-package com.oresomecraft.coin;
+package com.oresomecraft.coin.playerinterfaces;
 
+import com.oresomecraft.coin.OresomeCoin;
+import com.oresomecraft.coin.SQLManager;
+import com.oresomecraft.coin.TransactionOperations;
+import com.oresomecraft.coin.Wallet;
 import com.oresomecraft.coin.database.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;

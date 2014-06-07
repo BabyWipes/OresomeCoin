@@ -1,5 +1,9 @@
-package com.oresomecraft.coin;
+package com.oresomecraft.coin.playerinterfaces;
 
+import com.oresomecraft.coin.OresomeCoin;
+import com.oresomecraft.coin.SQLManager;
+import com.oresomecraft.coin.TransactionOperations;
+import com.oresomecraft.coin.Wallet;
 import com.oresomecraft.coin.database.MySQL;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
